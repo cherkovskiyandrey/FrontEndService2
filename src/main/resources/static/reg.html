@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <link href="/css/reg.css" rel="stylesheet">
+    <script src="/js/reg.js"></script>
+</head>
+<body>
+<h3>Форма регистрации</h3>
+
+<div class="my_form">
+    <form action="action_page.php">
+        <label for="fname">Логин</label>
+        <input type="text" id="login" name="login" oninput="checkLogin()" onblur="resumeLogin()">
+
+        <div id="login_warning" class="login_warning">
+            Такой логин уже есть в системе!<br>
+            Возможные варианты:
+            <ul id="login_offers">
+            </ul>
+        </div>
+
+
+        <label for="fname">Имя</label>
+        <input type="text" id="fname" name="firstname">
+
+        <label for="lname">Фамилия</label>
+        <input type="text" id="lname" name="lastname">
+
+        <label for="country">Страна</label>
+        <select id="country" name="country">
+            <option value="unknown"> loading...</option>
+        </select>
+
+        <input type="submit" value="Submit">
+    </form>
+</div>
+</body>
+</html>

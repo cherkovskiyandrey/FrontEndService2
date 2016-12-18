@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    box-sizing: border-box;
+}
+body, html {
+	height: 100%;
+    margin: 0;
+    position: relative;
+    font-style: italic;
+}
+.header {
+    width: 100%;
+    padding: 15px;
+    background-color: black;
+}
+.header_x {
+    position: relative;
+    border: 1px solid transparent;
+}
+.bgimg {
+    background-image: url('/img/city.jpg');
+    min-height: 100%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.ttt {
+   color: black;
+   position: relative;
+   font-size: 2em;
+   margin: 0;
+}
+.button {
+    background-color: transparent; /* Green #4CAF50*/
+    border: none;
+    color: rgb(128,128,128);
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    border-radius: 8px;
+}
+.button:hover {
+color: white;
+}
+.login-form {
+	text-align: right;
+}
+.login-form button {
+display: inline-block;
+
+}
+.center_text {
+margin-top: 200px;
+text-align: center;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="login-form">
+        <button id="input" class="button">Войти</button>
+        <button id="reg" class="button" onclick="">Зарегестрироваться</button>
+    </div>
+</div>
+<div class="bgimg ttt">
+    <div class="header_x">
+        <h2 class="center_text">Социальная сеть<br>Друзья</h2>
+    </div>
+</div>
+<script type="text/javascript">
+    document.getElementById("reg").onclick = function () {
+        location.href = "/reg.html";
+    };
+</script>
+</body>
+</html>
