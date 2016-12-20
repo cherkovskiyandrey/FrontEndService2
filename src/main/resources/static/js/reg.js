@@ -1,85 +1,130 @@
-window.addEventListener("load", loadCountry);
+window.addEventListener("load", function() {var o = new CountryLoader(); o.loadCountry();});
+window.addEventListener("load", function() {var o = new LoginHandler(); o.init();});
 
-function writeCountriesToForm(countries) {
-    //var out = "";
-    var selectNode = document.getElementById("country");
-    clearContext(selectNode);
-    var i;
-    for(i = 0; i < countries.length; ++i) {
-         //out += "<option value=\"" + countries[i].name + "\">" + countries[i].name + "</option>";
-        var opt = document.createElement("option");
-        opt.setAttribute("value", countries[i].name);
-        var txt = document.createTextNode(countries[i].description);
-        opt.appendChild(txt);
-        selectNode.appendChild(opt);
+function CountryLoader() {
+    this.debugField = document.getElementById("debug");
+    this.selectNode = document.getElementById("country");
+
+    this.loadCountry = function() {
+        ajaxLoader('GET', '/country/test', this.writeCountriesToForm.bind(this), this.writeError.bind(this));
     }
-    //document.getElementById("country").innerHTML = out;
-}
-function clearContext(mainNode) {
-    while(mainNode.firstChild) {
-        mainNode.removeChild(mainNode.firstChild);
-    }
-}
 
-function writeError(err) {
-    document.getElementById("debug").innerHTML = "Не удалось загрузить страны: " + err;
-}
-function loadCountry() {
-    ajaxLoader('GET', '/country/test', this.writeCountriesToForm, this.writeError);
-}
-
-var offerLogins = [];
-function checkLogin() {
-    var login = document.getElementById("login").value;
-    ajaxLoader('GET', '/users/check/login?login=' + login, checkLoginComplete, function() {});
-    console.log(document.getElementById("login").value);
-}
-
-function checkLoginComplete(variants) {
-    if(variants.length == 0) {
-        document.getElementById("login").style.background = "white";
-        document.getElementById("login_warning").style.display = 'none';
-    } else {
-        offerLogins = null;
-        console.log("offerLogins: " + offerLogins);
-        offerLogins = variants;
-        console.log("variants: " + variants);
-        document.getElementById("login").style.background = "#ffcccc";
-    }
-}
-
-
-function resumeLogin() {
-    if(offerLogins.length != 0) {
-        document.getElementById("login_warning").style.display = 'block';
-    }
-    //login_offers
-    var offerLoginsList = document.getElementById("login_offers");
-    clearContext(offerLoginsList);
-    for(i = 0; i < offerLogins.length; ++i) {
-        var opt = document.createElement("li");
-        var txt = document.createTextNode(offerLogins[i]);
-        opt.appendChild(txt);
-        offerLoginsList.appendChild(opt)
-     }
-}
-
-
-function ajaxLoader(method, url, onSuccess, onFail) {
-  var xhttp;
-  xhttp=new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4) {
-        if(this.status == 200) {
-            onSuccess(JSON.parse(this.responseText));
-        } else {
-            onFail(this.status);
+    this.writeCountriesToForm = function(countries) {
+        clearContext(this.selectNode);
+        var i;
+        for(i = 0; i < countries.length; ++i) {
+            var opt = document.createElement("option");
+            opt.setAttribute("value", countries[i].name);
+            var txt = document.createTextNode(countries[i].description);
+            opt.appendChild(txt);
+            this.selectNode.appendChild(opt);
         }
     }
-  };
-  xhttp.open(method, url, true);
-  xhttp.send();
+
+    this.writeError = function(err) {
+        alert("Не удалось загрузить страны: " + err);
+    }
+
+    this.loadCountry();
 }
+
+
+function LoginHandler() {
+    this.offerLogins = [];
+
+    this.checkLogin = function() {
+        var login = document.getElementById("login").value;
+        console.log("Current value: " + login);
+        ajaxLoader('GET', '/users/check/login?login=' + login, this.checkLoginComplete.bind(this), function() {});
+        console.log(document.getElementById("login").value);
+    }
+
+    this.checkLoginComplete = function(variants) {
+        if(variants.length == 0) {
+            document.getElementById("login").style.background = "white";
+            document.getElementById("login_warning").style.display = 'none';
+            this.offerLogins = [];
+        } else {
+            this.offerLogins = [];
+            console.log("offerLogins: " + this.offerLogins);
+            this.offerLogins = variants;
+            console.log("variants: " + variants);
+            document.getElementById("login").style.background = "#ffcccc";
+        }
+    }
+
+    this.resumeLogin = function() {
+        if(this.offerLogins.length == 0) {
+            return;
+        }
+        var offerLoginsList = document.getElementById("login_offers");
+        clearContext(offerLoginsList);
+        for(i = 0; i < this.offerLogins.length; ++i) {
+            var opt = document.createElement("li");
+            var txt = document.createTextNode(this.offerLogins[i]);
+            opt.appendChild(txt);
+            offerLoginsList.appendChild(opt)
+        }
+        document.getElementById("login_warning").style.display = 'block';
+    }
+
+    this.init = function() {
+        document.getElementById("login").oninput = this.checkLogin.bind(this);
+        document.getElementById("login").onblur = this.resumeLogin.bind(this);
+        document.getElementById("login").onpaste = this.resumeLogin.bind(this);
+        document.getElementById("login").onclick = this.resumeLogin.bind(this);
+    }
+}
+
+
+
+// Module example of LoginHandler
+//(function() {
+//    var offerLogins = null;
+//    function checkLogin() {
+//        var login = document.getElementById("login").value;
+//        console.log("Current value: " + login);
+//        ajaxLoader('GET', '/users/check/login?login=' + login, checkLoginComplete, function() {});
+//        console.log(document.getElementById("login").value);
+//    }
+//
+//    function checkLoginComplete(variants) {
+//        if(variants.length == 0) {
+//            document.getElementById("login").style.background = "white";
+//            document.getElementById("login_warning").style.display = 'none';
+//            offerLogins = null;
+//        } else {
+//            offerLogins = null;
+//            console.log("offerLogins: " + offerLogins);
+//            offerLogins = variants;
+//            console.log("variants: " + variants);
+//            document.getElementById("login").style.background = "#ffcccc";
+//        }
+//    }
+//
+//
+//    function resumeLogin() {
+//        //login_offers
+//        var offerLoginsList = document.getElementById("login_offers");
+//        clearContext(offerLoginsList);
+//        for(i = 0; i < offerLogins.length; ++i) {
+//            var opt = document.createElement("li");
+//            var txt = document.createTextNode(offerLogins[i]);
+//            opt.appendChild(txt);
+//            offerLoginsList.appendChild(opt)
+//         }
+//        if(offerLogins.length != 0) {
+//            document.getElementById("login_warning").style.display = 'block';
+//        }
+//    }
+//
+//    function init() {
+//        document.getElementById("login").oninput = checkLogin;
+//        document.getElementById("login").onblur = resumeLogin;
+//    }
+//
+//    window.addEventListener("load", init);
+//}());
 
 
 

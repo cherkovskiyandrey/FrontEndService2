@@ -21,12 +21,6 @@ public class MainController {
 
     private final ConcurrentMap<String, Profile> users = new ConcurrentHashMap<>();
 
-//    @RequestMapping("/greeting")
-//    public String greeting(@RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
-//        model.addAttribute("name", name);
-//        return "greeting";
-//    }
-
     public MainController() {
         this.users.put("andrey", new Profile());
     }
@@ -55,7 +49,7 @@ public class MainController {
             final String l = login + i;
             if(!users.containsKey(l)) {
                 supposedLogins.add(l);
-                if(supposedLogins.size() == 3) {
+                if(supposedLogins.size() == 5) {
                     break;
                 }
             }
